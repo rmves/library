@@ -45,22 +45,33 @@ const createBook = (book) => {
     const pages = document.createElement('p')
     const btnGroup = document.createElement('div')
     const removeBookBtn = document.createElement('button')
+    const isReadBtn = document.createElement('button')
 
     card.classList.add('book-card')
     card.dataset.booknum = book.number
     btnGroup.classList.add('button-group')
     removeBookBtn.classList.add('btn')
     removeBookBtn.onclick = removeBook
+    isReadBtn.onclick = toggleIsRead
 
     title.textContent = `"${book.title}"`
     author.textContent = book.author
     pages.textContent = `${book.pages} Pages`
     removeBookBtn.textContent = 'Remove'
 
+    if (book.isRead) {
+        isReadBtn.classList.add('btn-light-green')
+        isReadBtn.textContent = 'Read'
+    } else {
+        isReadBtn.classList.add('btn-light-red')
+        isReadBtn.textContent = 'Not Read'
+    }
+
     card.appendChild(title)
     card.appendChild(author)
     card.appendChild(pages)
     btnGroup.appendChild(removeBookBtn)
+    btnGroup.appendChild(isReadBtn)
     card.appendChild(btnGroup)
     bookGrid.appendChild(card)
 }
@@ -86,16 +97,29 @@ const addBookToPage = (e) => {
 }
 
 const setBookNumber = () => {
-    // const bookNum = document.querySelector('.book-card').dataset.booknum
-    for (let book of myLibrary) {
-        book.number = myLibrary.findIndex(book)
+    myLibrary.map(obj => {
+        obj.number = myLibrary.indexOf(obj)
+    })
     }
-}
 
-const removeBook = () => {
-    const booksList = Array.from(bookGrid.children)
+const removeBook = (e) => {
+    const bookNum = e.target.parentNode.parentNode.dataset.booknum
     myLibrary.splice(bookNum,1)
-    // createBookGrid()
+    setBookNumber()
+    createBookGrid()
+    }
+
+const toggleIsRead = (e) => {
+    const status = e.target.parentNode.lastChild
+    if (status.innerHTML == 'Read') {
+        status.classList.remove('btn-light-green')
+        status.classList.add('btn-light-red')
+        status.innerHTML = 'Not Read'
+    } else {
+        status.classList.remove('btn-light-red')
+        status.classList.add('btn-light-green')
+       status.innerHTML = 'Read'}
+    console.log(status)
 }
 
 
